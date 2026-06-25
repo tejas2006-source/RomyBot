@@ -39,17 +39,23 @@ from swing_trade import analyze, Analysis
 # ------------------------------ configuration ---------------------------- #
 
 DEFAULT_UNIVERSE = [
+    # megacaps
     "NVDA", "AAPL", "MSFT", "AMD", "TSLA",
     "AMZN", "GOOGL", "META", "AVGO", "NFLX",
+    # broader liquid names that base more often
+    "PLTR", "COIN", "SHOP", "UBER", "CRWD",
+    "SMCI", "MU", "QCOM", "NOW", "PANW",
+    "SNOW", "DDOG", "NET", "ABNB", "MRVL",
 ]
 
 ALPACA_BASE = "https://paper-api.alpaca.markets"
 RISK_FRACTION = 0.01           # risk 1% of account equity per trade
+MAX_POSITION_FRACTION = 0.10   # cap any single position at 10% of equity
 TAKE_PROFIT_R = 2.0            # take-profit at 2R
 LOG_PATH = os.path.join(os.path.dirname(__file__), "trades_log.csv")
 
 LOG_FIELDS = [
-    "timestamp", "ticker", "decision", "price", "entry", "stop",
+    "timestamp", "ticker", "decision", "score", "price", "entry", "stop",
     "take_profit", "qty", "risk_per_share", "risk_dollars",
     "order_id", "status", "notes",
 ]
@@ -115,9 +121,14 @@ def submit_bracket(headers: dict, ticker: str, qty: int,
 def size_position(equity: float, entry: float, stop: float) -> tuple[int, float, float]:
     risk_dollars = equity * RISK_FRACTION
     risk_per_share = entry - stop
-    if risk_per_share <= 0:
+    if risk_per_share <= 0 or entry <= 0:
         return 0, risk_per_share, risk_dollars
     qty = math.floor(risk_dollars / risk_per_share)
+    # Cap notional at MAX_POSITION_FRACTION of equity so a tight stop can't
+    # produce an oversized position.
+    max_notional = equity * MAX_POSITION_FRACTION
+    qty_by_notional = math.floor(max_notional / entry)
+    qty = min(qty, qty_by_notional)
     return qty, risk_per_share, risk_dollars
 
 
@@ -143,7 +154,8 @@ def process(ticker: str, headers: dict, equity: float, dry_run: bool) -> dict:
 
     if not a.eligible:
         row = {
-            **base, "decision": "SKIP", "price": f"{a.price:.2f}",
+            **base, "decision": "SKIP", "score": a.score,
+            "price": f"{a.price:.2f}",
             "notes": "; ".join(a.reasons) or "did not qualify",
         }
         log_row(row)
@@ -155,7 +167,7 @@ def process(ticker: str, headers: dict, equity: float, dry_run: bool) -> dict:
     take_profit = entry + TAKE_PROFIT_R * rps
 
     row = {
-        **base, "decision": "VALID", "price": f"{a.price:.2f}",
+        **base, "decision": "VALID", "score": a.score, "price": f"{a.price:.2f}",
         "entry": f"{entry:.2f}", "stop": f"{stop:.2f}",
         "take_profit": f"{take_profit:.2f}", "qty": qty,
         "risk_per_share": f"{rps:.2f}", "risk_dollars": f"{risk_dollars:.0f}",
