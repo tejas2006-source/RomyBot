@@ -54,11 +54,15 @@ MAX_POSITION_FRACTION = 0.10   # cap any single position at 10% of equity
 TAKE_PROFIT_R = 2.0            # take-profit at 2R
 LOG_PATH = os.path.join(os.path.dirname(__file__), "trades_log.csv")
 
+# Unified schema shared with run_pivot.py so both strategies log into the
+# same trades_log.csv table. Daily-swing rows leave pivot-only columns blank.
 LOG_FIELDS = [
-    "timestamp", "ticker", "decision", "score", "price", "entry", "stop",
-    "take_profit", "qty", "risk_per_share", "risk_dollars",
+    "timestamp", "strategy", "ticker", "decision", "market_open", "price",
+    "key_level", "key_level_name", "signal_time", "entry", "stop",
+    "take_profit", "rr", "qty", "risk_per_share", "risk_dollars",
     "order_id", "status", "notes",
 ]
+STRATEGY = "daily_swing"
 
 
 # ------------------------------- credentials ----------------------------- #
@@ -143,7 +147,7 @@ def log_row(row: dict) -> None:
 
 def process(ticker: str, headers: dict, equity: float, dry_run: bool) -> dict:
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    base = {"timestamp": now, "ticker": ticker}
+    base = {"timestamp": now, "strategy": STRATEGY, "ticker": ticker}
 
     try:
         a: Analysis = analyze(ticker)

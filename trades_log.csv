@@ -1,11 +1,12 @@
-timestamp,ticker,decision,price,entry,stop,take_profit,qty,risk_per_share,risk_dollars,order_id,status,notes
-2026-06-22T13:46:11+00:00,NVDA,SKIP,212.73,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 16,758,521 vs need >= 1.5x 10d avg (242,497,305)."
-2026-06-22T13:46:18+00:00,AAPL,SKIP,301.36,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 4,160,706 vs need >= 1.5x 10d avg (84,268,590)."
-2026-06-22T13:46:24+00:00,MSFT,SKIP,381.37,,,,,,,,,"No tight base: 10-day range is 15.1% (need <= 15%).; Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 4,671,515 vs need >= 1.5x 10d avg (57,349,095).; No accumulation: down-day volume >= up-day volume."
-2026-06-22T13:46:30+00:00,AMD,SKIP,544.91,,,,,,,,,"No tight base: 10-day range is 27.7% (need <= 15%).; Volume weak: today 3,103,810 vs need >= 1.5x 10d avg (49,865,670)."
-2026-06-22T13:46:37+00:00,TSLA,SKIP,403.40,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 4,862,412 vs need >= 1.5x 10d avg (78,002,790)."
-2026-06-22T13:46:44+00:00,AMZN,SKIP,240.38,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 4,804,241 vs need >= 1.5x 10d avg (69,352,365).; No accumulation: down-day volume >= up-day volume."
-2026-06-22T13:46:52+00:00,GOOGL,SKIP,353.74,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 5,293,458 vs need >= 1.5x 10d avg (46,374,900)."
-2026-06-22T13:47:01+00:00,META,SKIP,575.02,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 1,636,942 vs need >= 1.5x 10d avg (29,085,060).; No accumulation: down-day volume >= up-day volume."
-2026-06-22T13:47:09+00:00,AVGO,SKIP,400.75,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 3,788,752 vs need >= 1.5x 10d avg (56,295,525)."
-2026-06-22T13:47:19+00:00,NFLX,SKIP,76.59,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 6,419,575 vs need >= 1.5x 10d avg (69,014,085).; No accumulation: down-day volume >= up-day volume."
+timestamp,strategy,ticker,decision,market_open,price,key_level,key_level_name,signal_time,entry,stop,take_profit,rr,qty,risk_per_share,risk_dollars,order_id,status,notes
+2026-06-22T13:46:11+00:00,daily_swing,NVDA,SKIP,,212.73,,,,,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 16,758,521 vs need >= 1.5x 10d avg (242,497,305)."
+2026-06-22T13:46:18+00:00,daily_swing,AAPL,SKIP,,301.36,,,,,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 4,160,706 vs need >= 1.5x 10d avg (84,268,590)."
+2026-06-22T13:46:24+00:00,daily_swing,MSFT,SKIP,,381.37,,,,,,,,,,,,,"No tight base: 10-day range is 15.1% (need <= 15%).; Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 4,671,515 vs need >= 1.5x 10d avg (57,349,095).; No accumulation: down-day volume >= up-day volume."
+2026-06-22T13:46:30+00:00,daily_swing,AMD,SKIP,,544.91,,,,,,,,,,,,,"No tight base: 10-day range is 27.7% (need <= 15%).; Volume weak: today 3,103,810 vs need >= 1.5x 10d avg (49,865,670)."
+2026-06-22T13:46:37+00:00,daily_swing,TSLA,SKIP,,403.40,,,,,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 4,862,412 vs need >= 1.5x 10d avg (78,002,790)."
+2026-06-22T13:46:44+00:00,daily_swing,AMZN,SKIP,,240.38,,,,,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 4,804,241 vs need >= 1.5x 10d avg (69,352,365).; No accumulation: down-day volume >= up-day volume."
+2026-06-22T13:46:52+00:00,daily_swing,GOOGL,SKIP,,353.74,,,,,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 5,293,458 vs need >= 1.5x 10d avg (46,374,900)."
+2026-06-22T13:47:01+00:00,daily_swing,META,SKIP,,575.02,,,,,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 1,636,942 vs need >= 1.5x 10d avg (29,085,060).; No accumulation: down-day volume >= up-day volume."
+2026-06-22T13:47:09+00:00,daily_swing,AVGO,SKIP,,400.75,,,,,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 3,788,752 vs need >= 1.5x 10d avg (56,295,525)."
+2026-06-22T13:47:19+00:00,daily_swing,NFLX,SKIP,,76.59,,,,,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 6,419,575 vs need >= 1.5x 10d avg (69,014,085).; No accumulation: down-day volume >= up-day volume."
+2026-06-30T09:14:50+00:00,30min_pivot,MU,VALID,closed,1145.31,1113.82,8 EMA,2026-06-29 18:00:00+00:00,1129.89,1112.69,1255.00,7.3,88,17.20,10000,,DRY_RUN,8 EMA level; TRIGGERED-retest | dry-run: order not submitted

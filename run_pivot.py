@@ -52,10 +52,12 @@ MAX_POSITION_FRACTION = 0.10   # cap any single position at 10% of equity
 LOG_PATH = os.path.join(os.path.dirname(__file__), "trades_log.csv")
 
 LOG_FIELDS = [
-    "timestamp", "ticker", "decision", "score", "price", "entry", "stop",
-    "take_profit", "qty", "risk_per_share", "risk_dollars",
+    "timestamp", "strategy", "ticker", "decision", "market_open", "price",
+    "key_level", "key_level_name", "signal_time", "entry", "stop",
+    "take_profit", "rr", "qty", "risk_per_share", "risk_dollars",
     "order_id", "status", "notes",
 ]
+STRATEGY = "30min_pivot"
 
 
 # ------------------------------- credentials ----------------------------- #
@@ -136,9 +138,10 @@ def log_row(row: dict) -> None:
 
 
 def process(ticker: str, headers: dict, equity: float,
-            dry_run: bool, use_fine: bool) -> dict:
+            dry_run: bool, use_fine: bool, market_open: bool) -> dict:
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    base = {"timestamp": now, "ticker": ticker}
+    base = {"timestamp": now, "strategy": STRATEGY, "ticker": ticker,
+            "market_open": "open" if market_open else "closed"}
 
     try:
         s: PivotSetup = analyze(ticker, use_fine=use_fine)
@@ -147,9 +150,18 @@ def process(ticker: str, headers: dict, equity: float,
         log_row(row)
         return row
 
+    # Shared strategy context logged for EVERY ticker, qualified or not.
+    ctx = {
+        **base, "price": f"{s.price:.2f}",
+        "key_level": f"{s.key_level:.2f}" if s.key_level is not None else "",
+        "key_level_name": s.key_level_name,
+        "signal_time": s.signal_time,
+        "rr": f"{s.rr:.1f}" if s.rr is not None else "",
+    }
+
     if not s.eligible:
         row = {
-            **base, "decision": "SKIP", "price": f"{s.price:.2f}",
+            **ctx, "decision": "SKIP",
             "notes": "; ".join(s.reasons) or "did not qualify",
         }
         log_row(row)
@@ -161,13 +173,12 @@ def process(ticker: str, headers: dict, equity: float,
     qty, rps, risk_dollars = size_position(equity, entry, stop)
 
     row = {
-        **base, "decision": "VALID", "price": f"{s.price:.2f}",
+        **ctx, "decision": "VALID",
         "entry": f"{entry:.2f}", "stop": f"{stop:.2f}",
         "take_profit": f"{take_profit:.2f}", "qty": qty,
         "risk_per_share": f"{rps:.2f}", "risk_dollars": f"{risk_dollars:.0f}",
-        "notes": f"RR {s.rr:.1f}:1; {s.key_level_name} level; "
-                 f"{'TRIGGERED-retest' if s.triggered else 'pre-break'}"
-                 if s.rr is not None else "",
+        "notes": f"{s.key_level_name} level; "
+                 f"{'TRIGGERED-retest' if s.triggered else 'pre-break'}",
     }
 
     if take_profit <= entry:
@@ -219,7 +230,7 @@ def main(argv: list[str]) -> int:
 
     placed = skipped = failed = 0
     for t in tickers:
-        row = process(t, headers, equity, dry_run, use_fine)
+        row = process(t, headers, equity, dry_run, use_fine, is_open)
         d = row["decision"]
         if d == "VALID" and row.get("order_id"):
             placed += 1
