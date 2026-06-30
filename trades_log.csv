@@ -10,3 +10,4 @@ timestamp,strategy,ticker,decision,market_open,price,key_level,key_level_name,si
 2026-06-22T13:47:09+00:00,daily_swing,AVGO,SKIP,,400.75,,,,,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 3,788,752 vs need >= 1.5x 10d avg (56,295,525)."
 2026-06-22T13:47:19+00:00,daily_swing,NFLX,SKIP,,76.59,,,,,,,,,,,,,"Trend not up: need 8EMA > 21EMA and price above the 8EMA.; Volume weak: today 6,419,575 vs need >= 1.5x 10d avg (69,014,085).; No accumulation: down-day volume >= up-day volume."
 2026-06-30T09:14:50+00:00,30min_pivot,MU,VALID,closed,1145.31,1113.82,8 EMA,2026-06-29 18:00:00+00:00,1129.89,1112.69,1255.00,7.3,88,17.20,10000,,DRY_RUN,8 EMA level; TRIGGERED-retest | dry-run: order not submitted
+2026-06-30T10:02:27+00:00,30min_pivot,AAPL,SKIP,closed,281.63,287.38,prior S/R,2026-06-29 17:00:00+00:00,,,,21.2,,,,,,Daily trend not stacked up (need 8>21>50 EMA).

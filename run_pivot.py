@@ -146,9 +146,8 @@ def process(ticker: str, headers: dict, equity: float,
     try:
         s: PivotSetup = analyze(ticker, use_fine=use_fine)
     except Exception as exc:  # noqa: BLE001
-        row = {**base, "decision": "ERROR", "notes": str(exc)}
-        log_row(row)
-        return row
+        # Data/analysis error: report it, but do NOT log failures to the table.
+        return {**base, "decision": "ERROR", "notes": str(exc)}
 
     # Shared strategy context logged for EVERY ticker, qualified or not.
     ctx = {
@@ -201,13 +200,14 @@ def process(ticker: str, headers: dict, equity: float,
 
     resp = submit_bracket(headers, ticker, qty, entry, stop, take_profit)
     if "error" in resp:
+        # Order rejection: report it, but do NOT log failures to the table.
         row["decision"] = "ORDER_FAILED"
         row["status"] = "error"
         row["notes"] = resp["error"]
-    else:
-        row["order_id"] = resp.get("id", "")
-        row["status"] = resp.get("status", "")
-        row["notes"] = (row.get("notes", "") + " | bracket buy-stop submitted").strip(" |")
+        return row
+    row["order_id"] = resp.get("id", "")
+    row["status"] = resp.get("status", "")
+    row["notes"] = (row.get("notes", "") + " | bracket buy-stop submitted").strip(" |")
     log_row(row)
     return row
 
